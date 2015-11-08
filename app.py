@@ -3,6 +3,12 @@
 
 ## by farsheed ashouri, for appido services.
 
+try:
+    import eventlet
+    eventlet.monkey_patch()
+except ImportError:
+    print('Eventlet is not available')
+    pass
 
 import ujson as json
 from bottle import Bottle, request, response, run, hook
