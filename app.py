@@ -107,6 +107,14 @@ def how_many_rated(custId, itemId, rate):
 
 
 
+@application.route('/api/how_many_rated_pack/<custId>/<itemId>', method=['GET', 'OPTIONS'])
+def how_many_rated_pack(custId, itemId):
+    pack = dict()
+    for i in xrange(1,6):
+        pack[i] = json.loads(how_many_rated(custId, itemId, i)).get('result', 0)
+
+    return json.dumps(dict(result=pack))
+
 
 
 @application.route('/api/get_average_rate/<custId>/<itemId>', method=['GET', 'OPTIONS'])
