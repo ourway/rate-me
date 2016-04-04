@@ -31,12 +31,12 @@ def enable_cors():
 
 
 
-@application.get('/ping')
+@application.get('/rate_engine/api/ping')
 def ping():
     return json.dumps({'message':'PONG'})
 
 
-@application.route('/api/rate/<custId>/<raterId>/<itemId>', method=['OPTIONS', 'POST'])
+@application.route('/rate_engine/api/rate_engine/<custId>/<raterId>/<itemId>', method=['OPTIONS', 'POST'])
 def rate_item(custId, raterId, itemId):
     """ rate something """
     payload = request.json
@@ -48,7 +48,7 @@ def rate_item(custId, raterId, itemId):
 
 
 
-@application.route('/api/unrate/<custId>/<raterId>/<itemId>',  method=['OPTIONS', 'POST'])
+@application.route('/rate_engine/api/unrate/<custId>/<raterId>/<itemId>',  method=['OPTIONS', 'POST'])
 def unrate_item(custId, raterId, itemId):
     """  remove rating """
     key = rate_item_key.format(custId=custId, raterId=raterId, itemId=itemId)
@@ -57,14 +57,14 @@ def unrate_item(custId, raterId, itemId):
 
 
 
-@application.route('/api/did_rate/<custId>/<raterId>/<itemId>', method=['GET', 'OPTIONS'])
+@application.route('/rate_engine/api/did_rate/<custId>/<raterId>/<itemId>', method=['GET', 'OPTIONS'])
 def did_rate(custId, raterId, itemId):
     """ a true or false """
     key = rate_item_key.format(custId=custId, raterId=raterId, itemId=itemId)
     return json.dumps(dict(result=r.exists(key)))
 
 
-@application.route('/api/get_rate/<custId>/<raterId>/<itemId>', method=['GET', 'OPTIONS'])
+@application.route('/rate_engine/api/get_rate/<custId>/<raterId>/<itemId>', method=['GET', 'OPTIONS'])
 def get_rate(custId, raterId, itemId):
     """ get rating """
     key = rate_item_key.format(custId=custId, raterId=raterId, itemId=itemId)
@@ -72,7 +72,7 @@ def get_rate(custId, raterId, itemId):
 
 
 
-@application.route('/api/get_raters/<custId>/<itemId>', method=['GET', 'OPTIONS'])
+@application.route('/rate_engine/api/get_raters/<custId>/<itemId>', method=['GET', 'OPTIONS'])
 def get_raters(custId, itemId):
     """ get ratters """
     pattern = rate_item_key.format(custId=custId, raterId='*', itemId=itemId)
@@ -86,7 +86,7 @@ def get_raters(custId, itemId):
 
 
 
-@application.route('/api/who_rated/<custId>/<itemId>/<rate>', method=['GET', 'OPTIONS'])
+@application.route('/rate_engine/api/who_rated/<custId>/<itemId>/<rate>', method=['GET', 'OPTIONS'])
 def who_rated(custId, itemId, rate):
     """ get those who rate 3 """
     pattern = rate_item_key.format(custId=custId, raterId='*', itemId=itemId)
@@ -100,14 +100,14 @@ def who_rated(custId, itemId, rate):
 
 
 
-@application.route('/api/how_many_rated/<custId>/<itemId>/<rate>', method=['GET', 'OPTIONS'])
+@application.route('/rate_engine/api/how_many_rated/<custId>/<itemId>/<rate>', method=['GET', 'OPTIONS'])
 def how_many_rated(custId, itemId, rate):
     raters = json.loads(who_rated(custId, itemId, rate)).get('result', [])
     return json.dumps(dict(result=len(raters)))
 
 
 
-@application.route('/api/how_many_rated_pack/<custId>/<itemId>', method=['GET', 'OPTIONS'])
+@application.route('/rate_engine/api/how_many_rated_pack/<custId>/<itemId>', method=['GET', 'OPTIONS'])
 def how_many_rated_pack(custId, itemId):
     pack = dict()
     for i in xrange(1,6):
@@ -117,7 +117,7 @@ def how_many_rated_pack(custId, itemId):
 
 
 
-@application.route('/api/get_average_rate/<custId>/<itemId>', method=['GET', 'OPTIONS'])
+@application.route('/rate_engine/api/get_average_rate/<custId>/<itemId>', method=['GET', 'OPTIONS'])
 def get_average_rate(custId, itemId):
     """ get avarage rate """
 
