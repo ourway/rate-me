@@ -36,7 +36,7 @@ def ping():
     return json.dumps({'message':'PONG'})
 
 
-@application.route('/rate_engine/api/rate_engine/<custId>/<raterId>/<itemId>', method=['OPTIONS', 'POST'])
+@application.route('/rate_engine/api/rate/<custId>/<raterId>/<itemId>', method=['OPTIONS', 'POST'])
 def rate_item(custId, raterId, itemId):
     """ rate something """
     payload = request.json
@@ -54,7 +54,6 @@ def unrate_item(custId, raterId, itemId):
     key = rate_item_key.format(custId=custId, raterId=raterId, itemId=itemId)
     r.delete(key)
     return json.dumps(dict(status=0))
-
 
 
 @application.route('/rate_engine/api/did_rate/<custId>/<raterId>/<itemId>', method=['GET', 'OPTIONS'])
@@ -75,6 +74,7 @@ def get_rate(custId, raterId, itemId):
 @application.route('/rate_engine/api/get_raters/<custId>/<itemId>', method=['GET', 'OPTIONS'])
 def get_raters(custId, itemId):
     """ get ratters """
+
     pattern = rate_item_key.format(custId=custId, raterId='*', itemId=itemId)
     raters = []
     pat = re.compile(r'RATE-ME\|[\w\d-]*\|([\w\d-]*)\|[\w\d-]*')
@@ -110,7 +110,7 @@ def how_many_rated(custId, itemId, rate):
 @application.route('/rate_engine/api/how_many_rated_pack/<custId>/<itemId>', method=['GET', 'OPTIONS'])
 def how_many_rated_pack(custId, itemId):
     pack = dict()
-    for i in xrange(1,6):
+    for i in range(1,6):
         pack[i] = json.loads(how_many_rated(custId, itemId, str(i))).get('result', 0)
 
     return json.dumps(dict(result=pack))
@@ -124,4 +124,4 @@ def get_average_rate(custId, itemId):
 
 
 if __name__ == '__main__':
-    run(application, host='0.0.0.0', port=8000)
+    run(application, host='0.0.0.0', port=8081)
